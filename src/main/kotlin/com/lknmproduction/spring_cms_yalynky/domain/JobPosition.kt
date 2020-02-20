@@ -8,11 +8,17 @@ import javax.persistence.*
 @Entity
 @Table(name = "job_position")
 data class JobPosition(
-        @Column(nullable = false) var title: String,
-        var description: String,
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
+        @OneToMany(mappedBy = "job_position") @JsonIgnoreProperties("positionWorkers") var positionWorkers: Set<PositionWorker> = mutableSetOf(),
         @ManyToOne var job: Job,
-        @OneToMany(mappedBy = "position") @JsonIgnoreProperties("positionWorkers") var positionWorkers: Set<PositionWorker> = mutableSetOf(),
+        @Column(name = "activation_date", nullable = false) var activationDate: Date,
+        @Column(name = "available_for_assignment", nullable = false) var availableForAssignment: Date,
+        var description: String,
+        @Column(name = "full_time_equivalent") var fullTimeEquivalent: Int,
+        var retirement: Date,
+        @Column(nullable = false) var title: String,
         @Column(name = "valid_from", nullable = false) var validFrom: Date,
         @Column(name = "valid_to", nullable = false) var validTo: Date,
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null
+        @Column(name = "position_number", nullable = false, unique = true) var positionNumber: Int
+
 )
