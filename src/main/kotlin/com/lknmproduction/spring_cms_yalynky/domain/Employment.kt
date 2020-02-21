@@ -1,7 +1,6 @@
 package com.lknmproduction.spring_cms_yalynky.domain
 
 import java.util.*
-import javax.persistence.Entity
 import javax.persistence.*
 
 

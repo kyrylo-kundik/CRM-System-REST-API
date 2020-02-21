@@ -17,8 +17,8 @@ data class WorkerBankAccount(
         var description: String,
         var email: String,
         @Column(nullable = false) var iban: String,
-        @Column(name = "account_holder") var swift_code: String,
+        @Column(name = "swift_code") var swiftCode: String,
         var state: String,
         var webURL: String,
-        @Column(nullable = false, name = "account_holder") var accountNumber: String
+        @Column(nullable = false, name = "account_number") var accountNumber: String
 )
