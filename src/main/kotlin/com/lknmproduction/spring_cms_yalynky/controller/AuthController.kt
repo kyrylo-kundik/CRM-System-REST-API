@@ -70,20 +70,13 @@ class AuthController {
             if (usernameExists(newUser.username!!)) {
                 return ResponseEntity(ResponseMessage("Username is already taken!"),
                         HttpStatus.BAD_REQUEST)
-            } else if (emailExists(newUser.email!!)) {
-                return ResponseEntity(ResponseMessage("Email is already in use!"),
-                        HttpStatus.BAD_REQUEST)
             }
 
             // Creating user's account
             val user = User(
-                    0,
-                    newUser.username!!,
-                    newUser.firstName!!,
-                    newUser.lastName!!,
-                    newUser.email!!,
-                    encoder.encode(newUser.password),
-                    true
+                    id = 0,
+                    username = newUser.username!!,
+                    password = encoder.encode(newUser.password)
             )
             user.roles = listOf(roleRepository.findByName("Employee").get())
 
@@ -94,10 +87,6 @@ class AuthController {
             return ResponseEntity(ResponseMessage("User already exists!"),
                     HttpStatus.BAD_REQUEST)
         }
-    }
-
-    private fun emailExists(email: String): Boolean {
-        return userRepository.findByUsername(email).isPresent
     }
 
     private fun usernameExists(username: String): Boolean {

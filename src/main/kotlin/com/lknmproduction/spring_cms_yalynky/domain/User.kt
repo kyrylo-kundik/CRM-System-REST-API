@@ -10,22 +10,19 @@ data class User(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long? = 0,
 
-        @Column(name = "username")
+        @Column(name = "username", nullable = false, unique = true)
         var username: String? = null,
 
-        @Column(name = "first_name")
-        var firstName: String? = null,
+        @Column(name = "full_name")
+        var fullName: String? = null,
 
-        @Column(name = "last_name")
-        var lastName: String? = null,
+        @Column(name = "image_url")
+        var imageUrl: String? = null,
 
-        @Column(name = "email")
-        var email: String? = null,
-
-        @Column(name = "password")
+        @Column(name = "password", nullable = false)
         var password: String? = null,
 
-        @Column(name = "enabled")
+        @Column(name = "enabled", nullable = false)
         var enabled: Boolean = false,
 
         @ManyToMany(fetch = FetchType.EAGER)
@@ -34,5 +31,22 @@ data class User(
                 joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
                 inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
         )
-        var roles: Collection<Role>? = null
+        var roles: Collection<Role>? = null,
+
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "position_fk")
+        var position: Position? = null,
+
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "department_fk")
+        var department: Department? = null,
+
+        @OneToMany(mappedBy = "creator")
+        var cards: Collection<BoardCard>? = null,
+
+        @OneToMany(mappedBy = "creator")
+        var polls: Collection<Poll>? = null,
+
+        @OneToMany(mappedBy = "respondent")
+        var polls_submissions: Collection<PollSubmission>? = null
 )
