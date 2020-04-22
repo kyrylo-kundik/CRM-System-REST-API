@@ -26,6 +26,11 @@ data class BoardCard(
         @JoinColumn(name = "user_fk", nullable = false)
         var creator: User? = null,
 
-        @OneToMany(mappedBy = "card")
+        @ManyToMany
+        @JoinTable(
+                name = "board_cards_tags",
+                joinColumns = [JoinColumn(name = "board_card_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")]
+        )
         var tags: Collection<Tag>? = null
 )

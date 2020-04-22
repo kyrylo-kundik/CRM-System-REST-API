@@ -45,16 +45,16 @@ class AuthController {
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
 
-        val userCandidate: Optional<User> = userRepository.findByUsername(loginRequest.username!!)
+        val userCandidate: Optional<User> = userRepository.findByEmail(loginRequest.email!!)
 
         return if (userCandidate.isPresent) {
             val user: User = userCandidate.get()
             val authentication = authenticationManager.authenticate(
-                    UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password))
+                    UsernamePasswordAuthenticationToken(loginRequest.email, loginRequest.password))
             SecurityContextHolder.getContext().authentication = authentication
-            val jwt: String = jwtProvider.generateJwtToken(user.username!!)
+            val jwt: String = jwtProvider.generateJwtToken(user.email!!)
             val authorities: List<GrantedAuthority> = user.roles!!.stream().map { role -> SimpleGrantedAuthority(role.name) }.collect(Collectors.toList<GrantedAuthority>())
-            ResponseEntity.ok(JwtResponse(jwt, user.username, authorities))
+            ResponseEntity.ok(JwtResponse(jwt, user.email, authorities))
         } else {
             ResponseEntity(ResponseMessage("User not found!"),
                     HttpStatus.BAD_REQUEST)
@@ -64,10 +64,10 @@ class AuthController {
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<*> {
 
-        val userCandidate: Optional<User> = userRepository.findByUsername(newUser.username!!)
+        val userCandidate: Optional<User> = userRepository.findByEmail(newUser.email!!)
 
         if (!userCandidate.isPresent) {
-            if (usernameExists(newUser.username!!)) {
+            if (emailExists(newUser.email!!)) {
                 return ResponseEntity(ResponseMessage("Username is already taken!"),
                         HttpStatus.BAD_REQUEST)
             }
@@ -75,10 +75,10 @@ class AuthController {
             // Creating user's account
             val user = User(
                     id = 0,
-                    username = newUser.username!!,
+                    email = newUser.email!!,
                     password = encoder.encode(newUser.password)
             )
-            user.roles = listOf(roleRepository.findByName("Employee").get())
+            user.roles = listOf(roleRepository.findByName(newUser.role!!).get())
 
             userRepository.save(user)
 
@@ -89,8 +89,8 @@ class AuthController {
         }
     }
 
-    private fun usernameExists(username: String): Boolean {
-        return userRepository.findByUsername(username).isPresent
+    private fun emailExists(email: String): Boolean {
+        return userRepository.findByEmail(email).isPresent
     }
 
 }

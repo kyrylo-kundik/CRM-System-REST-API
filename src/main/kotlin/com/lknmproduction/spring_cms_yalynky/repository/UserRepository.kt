@@ -8,11 +8,11 @@ import javax.transaction.Transactional
 
 interface UserRepository : JpaRepository<User, Long> {
 
-    fun existsByUsername(@Param("username") username: String): Boolean
+    fun existsByEmail(@Param("email") email: String): Boolean
 
-    fun findByUsername(@Param("username") username: String): Optional<User>
+    fun findByEmail(@Param("email") email: String): Optional<User>
 
     @Transactional
-    fun deleteByUsername(@Param("username") username: String)
+    fun deleteByEmail(@Param("email") email: String)
 
 }

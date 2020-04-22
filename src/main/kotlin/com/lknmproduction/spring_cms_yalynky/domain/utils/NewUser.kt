@@ -5,17 +5,25 @@ import java.io.Serializable
 
 class NewUser : Serializable {
 
-    @JsonProperty("username")
-    var username: String? = null
+    @JsonProperty("email")
+    var email: String? = null
+
+    @JsonProperty("name")
+    var name: String? = null
 
     @JsonProperty("password")
     var password: String? = null
 
+    @JsonProperty("role")
+    var role: String? = null
+
     constructor() {}
 
-    constructor(username: String, password: String) {
-        this.username = username
+    constructor(email: String, name: String, password: String, role: String) {
+        this.email = email
+        this.name = name
         this.password = password
+        this.role = role
     }
 
     companion object {

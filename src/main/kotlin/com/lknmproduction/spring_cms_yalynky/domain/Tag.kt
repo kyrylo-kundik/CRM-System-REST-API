@@ -10,9 +10,5 @@ data class Tag(
         val id: Long? = 0,
 
         @Column(name = "name", nullable = false)
-        var name: String? = null,
-
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "card_fk", nullable = false)
-        var card: BoardCard? = null
+        var name: String? = null
 )

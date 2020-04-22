@@ -10,11 +10,14 @@ data class User(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long? = 0,
 
-        @Column(name = "username", nullable = false, unique = true)
-        var username: String? = null,
+        @Column(name = "email", nullable = false, unique = true)
+        var email: String? = null,
 
-        @Column(name = "full_name")
-        var fullName: String? = null,
+        @Column(name = "about")
+        var about: String? = null,
+
+        @Column(name = "name", nullable = false)
+        var name: String? = null,
 
         @Column(name = "image_url")
         var imageUrl: String? = null,
@@ -33,20 +36,18 @@ data class User(
         )
         var roles: Collection<Role>? = null,
 
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "position_fk")
-        var position: Position? = null,
-
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "department_fk")
-        var department: Department? = null,
-
         @OneToMany(mappedBy = "creator")
         var cards: Collection<BoardCard>? = null,
 
         @OneToMany(mappedBy = "creator")
         var polls: Collection<Poll>? = null,
 
+        @OneToMany(mappedBy = "user")
+        var payments: Collection<Payment>? = null,
+
+        @OneToMany(mappedBy = "user")
+        var userPositions: Collection<UserPosition>? = null,
+
         @OneToMany(mappedBy = "respondent")
-        var polls_submissions: Collection<PollSubmission>? = null
+        var pollsSubmissions: Collection<PollSubmission>? = null
 )

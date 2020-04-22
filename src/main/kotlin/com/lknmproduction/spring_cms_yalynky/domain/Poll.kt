@@ -12,6 +12,9 @@ data class Poll(
         @Column(name = "title", nullable = false)
         var title: String? = null,
 
+        @Column(name = "description", nullable = false)
+        var description: String? = null,
+
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "user_fk", nullable = false)
         var creator: User? = null,

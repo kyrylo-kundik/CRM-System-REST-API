@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 class LoginUser : Serializable {
 
-    @JsonProperty("username")
-    var username: String? = null
+    @JsonProperty("email")
+    var email: String? = null
 
     @JsonProperty("password")
     var password: String? = null
 
     constructor()
 
-    constructor(username: String, password: String) {
-        this.username = username
+    constructor(email: String, password: String) {
+        this.email = email
         this.password = password
     }
 

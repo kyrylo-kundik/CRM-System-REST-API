@@ -19,6 +19,9 @@ data class Position(
         @Column(name = "description")
         var description: String? = null,
 
+        @Column(name = "image_url")
+        var imageUrl: String? = null,
+
         @OneToMany(mappedBy = "position")
-        var employees: Collection<User>? = null
+        var userPositions: Collection<UserPosition>? = null
 )
