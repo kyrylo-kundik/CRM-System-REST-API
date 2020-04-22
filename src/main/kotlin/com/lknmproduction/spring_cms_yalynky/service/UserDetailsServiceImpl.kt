@@ -17,13 +17,13 @@ class UserDetailsServiceImpl : UserDetailsService {
     lateinit var userRepository: UserRepository
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findByEmail(username).get()
+    override fun loadUserByUsername(email: String): UserDetails {
+        val user = userRepository.findByEmail(email).get()
 
         val authorities: List<GrantedAuthority> = user.roles!!.stream().map { role -> SimpleGrantedAuthority(role.name) }.collect(Collectors.toList<GrantedAuthority>())
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(username)
+                .withUsername(email)
                 .password(user.password)
                 .authorities(authorities)
                 .accountExpired(false)
