@@ -8,6 +8,8 @@ import com.lknmproduction.spring_cms_yalynky.repository.UserRepository
 import com.lknmproduction.spring_cms_yalynky.security.JwtProvider
 import com.lknmproduction.spring_cms_yalynky.web.response.JwtResponse
 import com.lknmproduction.spring_cms_yalynky.web.response.ResponseMessage
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,6 +24,7 @@ import java.util.*
 import java.util.stream.Collectors
 import javax.validation.Valid
 
+@Api(value = "Authentication interface, using JWT", tags = ["Auth"])
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -42,6 +45,7 @@ class AuthController {
     @Autowired
     lateinit var jwtProvider: JwtProvider
 
+    @ApiOperation(value = "Log in to the CRM")
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
 
@@ -61,6 +65,7 @@ class AuthController {
         }
     }
 
+    @ApiOperation(value = "Sing up to the CRM")
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<*> {
 
