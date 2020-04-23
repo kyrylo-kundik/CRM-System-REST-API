@@ -1,5 +1,6 @@
 package com.lknmproduction.spring_cms_yalynky.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -19,6 +20,7 @@ data class Poll(
         @JoinColumn(name = "user_fk", nullable = false)
         var creator: User? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "poll")
         var submissions: Collection<PollSubmission>? = null
 )

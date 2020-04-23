@@ -1,5 +1,6 @@
 package com.lknmproduction.spring_cms_yalynky.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -22,11 +23,9 @@ data class User(
         @Column(name = "image_url")
         var imageUrl: String? = null,
 
+        @JsonIgnore
         @Column(name = "password", nullable = false)
         var password: String? = null,
-
-        @Column(name = "enabled", nullable = false)
-        var enabled: Boolean = false,
 
         @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(
@@ -36,18 +35,23 @@ data class User(
         )
         var roles: Collection<Role>? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "creator")
         var cards: Collection<BoardCard>? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "creator")
         var polls: Collection<Poll>? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         var payments: Collection<Payment>? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         var userPositions: Collection<UserPosition>? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "respondent")
         var pollsSubmissions: Collection<PollSubmission>? = null
 )

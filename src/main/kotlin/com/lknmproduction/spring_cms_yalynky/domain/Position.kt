@@ -1,5 +1,6 @@
 package com.lknmproduction.spring_cms_yalynky.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -22,6 +23,8 @@ data class Position(
         @Column(name = "image_url")
         var imageUrl: String? = null,
 
+        @JsonIgnore
         @OneToMany(mappedBy = "position")
         var userPositions: Collection<UserPosition>? = null
+
 )
