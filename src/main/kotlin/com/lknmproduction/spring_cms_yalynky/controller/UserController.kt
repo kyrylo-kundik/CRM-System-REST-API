@@ -12,6 +12,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import kotlin.NoSuchElementException
@@ -24,16 +25,19 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation(value = "Get all users")
     @GetMapping
+    @PreAuthorize("hasRole('HR')")
     fun getUsers(): MutableList<User> = userRepository.findAll()
 
     @ApiOperation(value = "Get user by id")
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('HR') or hasRole('Employee')")
     fun getUser(@PathVariable userId: Long): Optional<User>? {
         return userRepository.findById(userId)
     }
 
     @ApiOperation(value = "Create a new User")
     @PostMapping
+    @PreAuthorize("hasRole('HR')")
     fun newUser(@RequestBody user: User): User {
         userRepository.save(user)
         return user
@@ -41,6 +45,7 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation(value = "Update an existing User")
     @PutMapping
+    @PreAuthorize("hasRole('HR') or hasRole('Employee')")
     @ResponseStatus(HttpStatus.OK)
     fun updateUser(user: User) {
         userRepository.save(user)
@@ -48,12 +53,14 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation(value = "Delete an existing User")
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('HR') or hasRole('Employee')")
     fun deleteUser(@PathVariable userId: Long) {
         userRepository.deleteById(userId)
     }
 
     @ApiOperation("Get user payments")
     @GetMapping("/{userId}/payments")
+    @PreAuthorize("hasRole('HR') or hasRole('Employee')")
     fun getUserPayments(@PathVariable userId: Long): ResponseEntity<*> {
         return try {
             ResponseEntity(userRepository.findById(userId).orElseThrow { throw NoSuchElementException() }.payments!!, HttpStatus.OK)
@@ -64,6 +71,7 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation("Create user payment (= pay user his salary)")
     @PostMapping("/{userId}/payments")
+    @PreAuthorize("hasRole('HR')")
     fun createUserPayment(@PathVariable userId: Long, @RequestBody payment: Payment): ResponseEntity<*> {
         val user: User?
         try {
@@ -77,6 +85,7 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation("Change User amount of salary")
     @PostMapping("/{userId}/changeFare")
+    @PreAuthorize("hasRole('HR')")
     fun changeUserFare(@PathVariable userId: Long, @RequestBody newFare: NewFare): ResponseEntity<*> {
         val position: UserPosition
         try {
@@ -91,6 +100,7 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation("Change user current position")
     @PostMapping("/{userId}/changePosition")
+    @PreAuthorize("hasRole('HR')")
     fun changeUserPosition(@PathVariable userId: Long, @RequestBody userPosition: UserPosition): ResponseEntity<*> {
         val user: User
         try {
@@ -110,6 +120,7 @@ class UserController(val userRepository: UserRepository, val paymentRepository: 
 
     @ApiOperation("Fire user from the position")
     @PostMapping("/{userId}/fire")
+    @PreAuthorize("hasRole('HR')")
     fun fireUser(@PathVariable userId: Long): ResponseEntity<*> {
         val user: User
         try {
