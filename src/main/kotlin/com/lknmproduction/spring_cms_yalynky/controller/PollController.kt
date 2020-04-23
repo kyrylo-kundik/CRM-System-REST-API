@@ -3,6 +3,7 @@ package com.lknmproduction.spring_cms_yalynky.controller
 import com.lknmproduction.spring_cms_yalynky.domain.Poll
 import com.lknmproduction.spring_cms_yalynky.domain.PollSubmission
 import com.lknmproduction.spring_cms_yalynky.repository.PollRepository
+import com.lknmproduction.spring_cms_yalynky.repository.PollSubmissionRepository
 import com.lknmproduction.spring_cms_yalynky.repository.UserRepository
 import com.lknmproduction.spring_cms_yalynky.web.response.ResponseMessage
 import io.swagger.annotations.Api
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
 @RequestMapping("/api/polls")
-class PollController(val pollRepository: PollRepository, val userRepository: UserRepository) {
+class PollController(val pollRepository: PollRepository, val userRepository: UserRepository, val pollSubmissionRepository: PollSubmissionRepository) {
 
     @ApiOperation(value = "Get all Polls")
     @GetMapping
@@ -31,9 +32,12 @@ class PollController(val pollRepository: PollRepository, val userRepository: Use
 
     @ApiOperation(value = "Create a new Poll")
     @PostMapping
-    fun newPoll(@RequestBody poll: Poll): Poll {
-        pollRepository.save(poll)
-        return poll
+    fun newPoll(@RequestBody poll: Poll, request: HttpServletRequest): Poll {
+        val user = userRepository.findByEmail(request.userPrincipal.name).get()
+
+        poll.creator = user
+
+        return pollRepository.save(poll)
     }
 
     @ApiOperation(value = "Update an existing Poll")
@@ -55,15 +59,12 @@ class PollController(val pollRepository: PollRepository, val userRepository: Use
         val poll: Poll = pollRepository.findById(pollId).orElse(null)
                 ?: return ResponseEntity(ResponseMessage("Poll not found!"),
                         HttpStatus.NOT_FOUND)
-        poll.submissions!!.plus(pollSubmission)
+        pollSubmission.poll = poll
 
         val user = userRepository.findByEmail(request.userPrincipal.name).get()
-        user.pollsSubmissions!!.plus(pollSubmission)
+        pollSubmission.respondent = user
 
-        userRepository.save(user)
-        pollRepository.save(poll)
-
-        return ResponseEntity(ResponseMessage("ok"), HttpStatus.OK)
+        return ResponseEntity(pollSubmissionRepository.save(pollSubmission), HttpStatus.OK)
     }
 
 }

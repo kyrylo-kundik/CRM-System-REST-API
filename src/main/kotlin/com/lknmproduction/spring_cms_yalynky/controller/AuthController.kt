@@ -49,6 +49,10 @@ class AuthController {
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
 
+        if (loginRequest.email.isNullOrBlank() || loginRequest.password.isNullOrBlank()) {
+            return ResponseEntity(ResponseMessage("You must pass all valid params"), HttpStatus.BAD_REQUEST)
+        }
+
         val userCandidate: Optional<User> = userRepository.findByEmail(loginRequest.email!!)
 
         return if (userCandidate.isPresent) {
@@ -69,6 +73,10 @@ class AuthController {
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<*> {
 
+        if (newUser.email.isNullOrBlank() || newUser.password.isNullOrBlank() || newUser.role.isNullOrBlank() || newUser.name.isNullOrBlank()) {
+            return ResponseEntity(ResponseMessage("You must pass all valid params"), HttpStatus.BAD_REQUEST)
+        }
+
         val userCandidate: Optional<User> = userRepository.findByEmail(newUser.email!!)
 
         if (!userCandidate.isPresent) {
@@ -81,7 +89,8 @@ class AuthController {
             val user = User(
                     id = 0,
                     email = newUser.email!!,
-                    password = encoder.encode(newUser.password)
+                    password = encoder.encode(newUser.password),
+                    name = newUser.name!!
             )
             user.roles = listOf(roleRepository.findByName(newUser.role!!).get())
 
