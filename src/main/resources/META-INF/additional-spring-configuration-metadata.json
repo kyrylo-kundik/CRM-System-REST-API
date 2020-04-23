@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "assm.app.jwtSecret",
+      "type": "java.lang.String",
+      "description": "JWT generation secret key."
+    },
+    {
+      "name": "assm.app.jwtExpiration",
+      "type": "java.lang.String",
+      "description": "Expiration time for JWT access token. Should be Integer."
+    }
+  ]
+}
